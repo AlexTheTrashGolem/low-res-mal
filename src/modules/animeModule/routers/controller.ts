@@ -8,6 +8,7 @@ import {
 } from "../types/reqInterface";
 import { RouteGenericInterfaceFetchFiltered } from "../types/reqInterface";
 import { fetchFiltered } from "../utils/MALRequests";
+import {logger} from "../../../logger/winlog";
 
 export const createAnime = async (
   req: FastifyRequest<RouteGenericInterfaceAnime>,
@@ -23,6 +24,7 @@ export const createAnime = async (
       req.body.avgScore > 10 ||
       req.body.avgScore < 0
     ) {
+      logger.error("Invalid data format");
       return rep.status(400).send("Invalid data format");
     }
 
@@ -40,10 +42,12 @@ export const createAnime = async (
         }
       }
     );
+    logger.info("response", anime);
     return rep.status(200).send(anime);
 
 
   } catch (e) {
+    logger.error("error", e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -54,7 +58,6 @@ export const readAnime = async (
   rep: FastifyReply
 ): Promise<FastifyReply> => {
   try {
-    console.log(req.params);
     const anime = await ServiceClass.getRecord(
       {
         tableName: "anime",
@@ -62,9 +65,10 @@ export const readAnime = async (
         value: req.params.title
       }
     );
-
+    logger.info("response", anime);
     return rep.status(200).send(anime);
   } catch (e) {
+    logger.error("error", e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -80,6 +84,7 @@ export const updateAnime = async (
       //(req.body.newStartYear && req.body.newEndYear && Date.parse(req.body.newStartYear) > Date.parse(req.body.newEndYear)) ||
       (req.body.newAvgScore && (req.body.newAvgScore > 10 || req.body.newAvgScore < 0))
     ) {
+      logger.error("Invalid data format");
       rep.status(400).send("Invalid data format");
     }
     const anime = await ServiceClass.updateRecord(
@@ -98,15 +103,16 @@ export const updateAnime = async (
         value: [req.body.title]
       }
     );
-
+    logger.info("response", anime);
     return rep.status(200).send(anime);
   } catch (e) {
+    logger.error("error", e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
 
 export const deleteAnime = async (
-  req,
+  req: FastifyRequest<RouteGenericInterfaceDeleteAnime>,
   rep: FastifyReply
 ): Promise<FastifyReply> => {
   try {
@@ -117,8 +123,10 @@ export const deleteAnime = async (
         value: [req.params.title]
       }
     );
+    logger.info("response", anime);
     return rep.status(200).send(anime);
   } catch (e) {
+    logger.error("error", e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -136,8 +144,10 @@ export const fetchFilteredAnime = async (
         orderBy: req.query.orderBy
       }
     );
+    logger.info("response", filtered.data);
     return rep.status(200).send(JSON.stringify(filtered.data));
   } catch (e) {
+    logger.error("error", e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };

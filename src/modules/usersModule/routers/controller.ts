@@ -10,6 +10,7 @@ import {
   RouteGenericInterfaceUpdateAnimeListRecord,
   RouteGenericInterfaceDeleteAnimeListRecord
 } from "../types/reqInterface";
+import {logger} from "../../../logger/winlog";
 
 
 export const createUser = async (
@@ -25,6 +26,7 @@ export const createUser = async (
       (req.body.age && req.body.age > 99) ||
       (req.body.city && (req.body.city.length < 4 || req.body.city.length > 20))
     ) {
+      logger.error("Invalid data format");
       return rep.status(400).send("Invalid data format");
     }
     const user = await ServiceClass.createRecord(
@@ -38,10 +40,11 @@ export const createUser = async (
         }
       }
     );
-    console.log(JSON.stringify(user));
-
+    
+    logger.info(user);
     return rep.status(200).send(user);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -59,10 +62,12 @@ export const readUser = async (
         value: req.params.username
       }
     );
-    console.log(JSON.stringify(user));
+
+    logger.info(user);
 
     return rep.status(200).send(user);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -80,9 +85,9 @@ export const updateUser = async (
         (req.body.newAge && req.body.newAge > 99) ||
         (req.body.newCity && (req.body.newCity.length < 4 || req.body.newCity.length > 20))
     ) {
+      logger.error("Invalid data format");
       return rep.status(400).send("Invalid data format");
     }
-    console.log(JSON.stringify(req.body));
     const user = await ServiceClass.updateRecord(
       {
         tableName: "users",
@@ -96,8 +101,10 @@ export const updateUser = async (
         value: [req.body.userId]
       }
     );
+    logger.info(user);
     return rep.status(200).send(user);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -115,8 +122,10 @@ export const deleteUser = async (
       }
     );
 
+    logger.info(user);
     return rep.status(200).send(user);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -130,6 +139,7 @@ export const createAnimeListRecord = async (
       req.body.score > 10 ||
       req.body.score < 0
     ) {
+      logger.error("Invalid data format");
       return rep.status(400).send("Invalid data format");
     }
     const record = await ServiceClass.createRecord(
@@ -143,8 +153,10 @@ export const createAnimeListRecord = async (
         }
       }
     );
+    logger.info(record);
     return rep.status(200).send(record);
   } catch (e) {
+    logger.error(e);
     return rep.status(404).send(JSON.stringify(e));
   }
 };
@@ -161,8 +173,10 @@ export const readAnimeListRecord = async (
         value: req.params.userId
       }
     );
+    logger.info(records);
     return rep.status(200).send(records);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -176,6 +190,7 @@ export const updateAnimeListRecord = async (
       req.body.newScore > 10 ||
       req.body.newScore < 0
     ) {
+      logger.error("Invalid data format");
       return rep.status(400).send("Invalid data format");
     }
     const record = await ServiceClass.updateRecord(
@@ -189,8 +204,10 @@ export const updateAnimeListRecord = async (
         value: [req.body.titleId, req.body.userId]
       }
     );
+    logger.info(record);
     return rep.status(200).send(record);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };
@@ -207,8 +224,10 @@ export const deleteAnimeListRecord = async (
         value: [req.body.userId, req.body.titleId]
       }
     );
+    logger.info(record);
     return rep.status(200).send(record);
   } catch (e) {
+    logger.error(e);
     return rep.status(400).send(JSON.stringify(e));
   }
 };

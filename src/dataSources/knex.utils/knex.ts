@@ -1,4 +1,6 @@
 import knex from "knex";
+import {logger} from "../../logger/winlog";
+import {json} from "stream/consumers";
 
 export const knexCon = knex({
   client: 'pg',
@@ -8,6 +10,12 @@ export const knexCon = knex({
     user : process.env.DB_USER,
     password : process.env.DB_PASS,
     database : process.env.DB_NAME,
-    ssl: {rejectUnauthorized: false}
+    //ssl: {rejectUnauthorized: false}
   }
+}).on('query', (data) => {
+  logger.info({
+    method: data.method,
+    queryValues: data.bindings,
+    queryString: data.sql
+  });
 });

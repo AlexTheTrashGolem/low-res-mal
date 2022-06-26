@@ -17,25 +17,21 @@ class ServiceClass {
   }
   getRecord(data: readRecordType): QueryBuilder{
     const query = knexCon(data.tableName).select().where(data.searchBy, data.value);
-    console.log(query.toString());
     return query;
   }
 
   updateRecord(data: updateRecordType){
-    console.log(JSON.stringify(data));
     const makeCondition = () => {
       const chain = [];
       for(let i=0; i<data.value.length; i++){
         chain.push([data.searchBy[i], data.value[i]]);
       }
-      console.log("obj=", Object.fromEntries(chain));
       return Object.fromEntries(chain);
     };
     const query = knexCon(data.tableName)
       .returning(Object.keys(data.columnObject))
       .where(makeCondition())
       .update(data.columnObject);
-    console.log(query.toString());
     return query;
   }
   deleteRecord(data: deleteRecordType): QueryBuilder{
