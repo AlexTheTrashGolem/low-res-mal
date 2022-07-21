@@ -14,7 +14,7 @@
     "lint": "eslint ./src/",
     "lint:fix": "eslint ./src/ --fix",
     "tsc": "tsc",
-    "prepare": "husky install"
+    "prepare": "if [[ $NODE_ENVIRONMENT != \"production\" ]]; then husky install; fi"
   },
   "repository": {
     "type": "git",
