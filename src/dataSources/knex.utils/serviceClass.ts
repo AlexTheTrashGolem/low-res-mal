@@ -16,7 +16,14 @@ class ServiceClass {
 
   }
   getRecord(data: readRecordType): QueryBuilder{
-    const query = knexCon(data.tableName).select().where(data.searchBy, data.value);
+    const makeCondition = () => {
+      const chain = [];
+      for(let i=0; i<data.value.length; i++){
+        chain.push([data.searchBy[i], data.value[i]]);
+      }
+      return Object.fromEntries(chain);
+    };
+    const query = knexCon(data.tableName).select().where(makeCondition());
     return query;
   }
 

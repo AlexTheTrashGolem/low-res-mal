@@ -5,8 +5,8 @@ export type createRecordType = {
 
 export type readRecordType = {
   tableName: string;
-  searchBy: string;
-  value: number | string;
+  searchBy: string[];
+  value: Array<string | number>;
 };
 
 export type updateRecordType = {

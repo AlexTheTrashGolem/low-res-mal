@@ -26,7 +26,7 @@ interface RequestGenericInterfaceReadAnime {
   Body?: RequestBodyDefault;
   Querystring?: RequestQuerystringDefault;
   Params: {
-    title: string;
+    id: number;
   };
   Headers?: RequestHeadersDefault;
 }
@@ -49,7 +49,7 @@ interface RequestGenericInterfaceUpdateAnime {
 
 interface RequestGenericInterfaceDeleteAnime {
   Params: {
-    title: string;
+    id: number;
   };
 }
 

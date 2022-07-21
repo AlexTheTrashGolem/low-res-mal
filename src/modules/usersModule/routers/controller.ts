@@ -58,8 +58,8 @@ export const readUser = async (
     const user = await ServiceClass.getRecord(
       {
         tableName: "users",
-        searchBy: "username",
-        value: req.params.username
+        searchBy: ["id"],
+        value: [req.params.id]
       }
     );
 
@@ -117,8 +117,8 @@ export const deleteUser = async (
     const user = await ServiceClass.deleteRecord(
       {
         tableName: "users",
-        searchBy: ["username"],
-        value: [req.params.username]
+        searchBy: ["id"],
+        value: [req.params.id]
       }
     );
 
@@ -161,7 +161,7 @@ export const createAnimeListRecord = async (
   }
 };
 
-export const readAnimeListRecord = async (
+export const readUsersAnimeList = async (
   req: FastifyRequest<RouteGenericInterfaceGetAnimeListRecord>,
   rep: FastifyReply
 ):Promise<FastifyReply> => {
@@ -169,8 +169,29 @@ export const readAnimeListRecord = async (
     const records = await ServiceClass.getRecord(
       {
         tableName: "anime_list",
-        searchBy: "user_id",
-        value: req.params.userId
+        searchBy: ["user_id"],
+        value: [req.params.userId]
+      }
+    );
+    logger.info(records);
+    return rep.status(200).send(records);
+  } catch (e) {
+    logger.error(e);
+    return rep.status(400).send(JSON.stringify(e));
+  }
+};
+
+export const getAnimeListRecord = async (
+  req: FastifyRequest<RouteGenericInterfaceGetAnimeListRecord>,
+  rep: FastifyReply
+):Promise<FastifyReply> => {
+  try {
+    const records = await ServiceClass.getRecord(
+      {
+        tableName: "anime_list",
+        searchBy: [`title_id`, `user_id`],
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        value: [req.params.titleId!, req.params.userId]
       }
     );
     logger.info(records);

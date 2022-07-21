@@ -14,7 +14,7 @@ export const routes: RouteOptions[] = [
   },
   {
     method: "GET",
-    url: "/:username",
+    url: "/:id",
     handler: <RouteHandler>controller.readUser
   },
   {
@@ -24,7 +24,7 @@ export const routes: RouteOptions[] = [
   },
   {
     method: "DELETE",
-    url: "/:username",
+    url: "/:id",
     handler: <RouteHandler>controller.deleteUser
   },
   {
@@ -35,7 +35,12 @@ export const routes: RouteOptions[] = [
   {
     method: "GET",
     url: "/:userId/list",
-    handler: <RouteHandler>controller.readAnimeListRecord
+    handler: <RouteHandler>controller.readUsersAnimeList
+  },
+  {
+    method: "GET",
+    url: "/:userId/titleId",
+    handler: <RouteHandler>controller.getAnimeListRecord
   },
   {
     method: "PUT",

@@ -61,8 +61,8 @@ export const readAnime = async (
     const anime = await ServiceClass.getRecord(
       {
         tableName: "anime",
-        searchBy: "title",
-        value: req.params.title
+        searchBy: ["id"],
+        value: [req.params.id]
       }
     );
     logger.info("response", anime);
@@ -119,8 +119,8 @@ export const deleteAnime = async (
     const anime = await ServiceClass.deleteRecord(
       {
         tableName: "anime",
-        searchBy: ["title"],
-        value: [req.params.title]
+        searchBy: ["id"],
+        value: [req.params.id]
       }
     );
     logger.info("response", anime);

@@ -25,7 +25,7 @@ interface RequestGenericInterfaceReadUser {
   Body?: RequestBodyDefault;
   Querystring?: RequestQuerystringDefault;
   Params: {
-    username: string;
+    id: number;
   };
   Headers?: RequestHeadersDefault;
 }
@@ -46,7 +46,7 @@ interface RequestGenericInterfaceUpdateUser {
 
 interface RequestGenericInterfaceDeleteUser {
   Params: {
-    username: string;
+    id: number;
   };
 }
 
@@ -67,6 +67,7 @@ interface RequestGenericInterfaceReadAnimeListRecord {
   Querystring?: RequestQuerystringDefault;
   Params: {
     userId: number;
+    titleId?: number;
   };
   Headers?: RequestHeadersDefault;
 }

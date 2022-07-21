@@ -1,6 +1,5 @@
 import knex from "knex";
 import {logger} from "../../logger/winlog";
-import {json} from "stream/consumers";
 
 export const knexCon = knex({
   client: 'pg',
