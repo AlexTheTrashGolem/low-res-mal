@@ -33,7 +33,7 @@ interface RequestGenericInterfaceReadAnime {
 
 interface RequestGenericInterfaceUpdateAnime {
   Body: {
-    title: string;
+    titleId: number;
     newTitle?: string;
     newStudio?: string;
     newStartYear?: string;

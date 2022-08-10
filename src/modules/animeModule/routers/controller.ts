@@ -9,6 +9,7 @@ import {
 import { RouteGenericInterfaceFetchFiltered } from "../types/reqInterface";
 import { fetchFiltered } from "../utils/MALRequests";
 import {logger} from "../../../logger/winlog";
+import {isEmpty} from "../../usersModule/utils/auth";
 
 export const createAnime = async (
   req: FastifyRequest<RouteGenericInterfaceAnime>,
@@ -25,7 +26,7 @@ export const createAnime = async (
       req.body.avgScore < 0
     ) {
       logger.error("Invalid data format");
-      return rep.status(400).send("Invalid data format");
+      return rep.status(400).send({ok:false, err:"Invalid data format"});
     }
 
     const anime = await ServiceClass.createRecord(
@@ -48,7 +49,7 @@ export const createAnime = async (
 
   } catch (e) {
     logger.error("error", e);
-    return rep.status(400).send(JSON.stringify(e));
+    return rep.status(400).send({ok: false, err:JSON.stringify(e)});
   }
 };
 
@@ -69,7 +70,7 @@ export const readAnime = async (
     return rep.status(200).send(anime);
   } catch (e) {
     logger.error("error", e);
-    return rep.status(400).send(JSON.stringify(e));
+    return rep.status(400).send({ok: false, err:JSON.stringify(e)});
   }
 };
 
@@ -85,7 +86,7 @@ export const updateAnime = async (
       (req.body.newAvgScore && (req.body.newAvgScore > 10 || req.body.newAvgScore < 0))
     ) {
       logger.error("Invalid data format");
-      rep.status(400).send("Invalid data format");
+      rep.status(400).send({ok:false, err:"Invalid data format"});
     }
     const anime = await ServiceClass.updateRecord(
       {
@@ -99,15 +100,18 @@ export const updateAnime = async (
           genre: req.body.newGenre,
           status: req.body.newStatus
         },
-        searchBy: ["title"],
-        value: [req.body.title]
+        searchBy: ["id"],
+        value: [req.body.titleId]
       }
     );
     logger.info("response", anime);
+    if (isEmpty(anime!.res)){
+      return rep.status(400).send({ok: false, err:"anime not found"});
+    }
     return rep.status(200).send(anime);
   } catch (e) {
     logger.error("error", e);
-    return rep.status(400).send(JSON.stringify(e));
+    return rep.status(400).send({ok: false, err:JSON.stringify(e)});
   }
 };
 
@@ -124,10 +128,13 @@ export const deleteAnime = async (
       }
     );
     logger.info("response", anime);
+    if (isEmpty(anime!.res)){
+      return rep.status(400).send({ok: false, err:"anime not found"});
+    }
     return rep.status(200).send(anime);
   } catch (e) {
     logger.error("error", e);
-    return rep.status(400).send(JSON.stringify(e));
+    return rep.status(400).send({ok: false, err:JSON.stringify(e)});
   }
 };
 export const fetchFilteredAnime = async (
@@ -145,10 +152,10 @@ export const fetchFilteredAnime = async (
       }
     );
     logger.info("response", filtered.data);
-    return rep.status(200).send(JSON.stringify(filtered.data));
+    return rep.status(200).send({ok: true, res:JSON.stringify(filtered.data)});
   } catch (e) {
     logger.error("error", e);
-    return rep.status(400).send(JSON.stringify(e));
+    return rep.status(400).send({ok: false, err:JSON.stringify(e)});
   }
 };
 

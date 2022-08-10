@@ -8,7 +8,6 @@ const server = new Server(fastify({ logger: true }));
 
 server.registerRouter(usersModule);
 server.registerRouter(animeModule);
-
 //server.registerPlugin(onAuth);
 
 server.registerApi();

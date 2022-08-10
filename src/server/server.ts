@@ -3,6 +3,8 @@ import { IncomingMessage, Server as httpServer, ServerResponse } from "http";
 import { plugin, pluginSet, router, routerSet } from "./serverTypes";
 //import { initLocalDatabasesIfNotExists } from "../dataSources/initLocalDatabases";
 import { RouteOptions } from "@fastify/websocket";
+import {fastifyRequestContextPlugin} from "@fastify/request-context";
+import {logger} from "../logger/winlog";
 
 export class Server {
   private setOfRouters: routerSet;
@@ -19,11 +21,19 @@ export class Server {
     this.setOfRouters = routerSet ?? [];
     this.setOfPlugins = pluginSet ?? [];
     this.serverInstance = server;
+    server.register(fastifyRequestContextPlugin);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    server.register(require('@fastify/cookie'),{
+      secret: process.env.COOKIE_SECRET
+    });
   }
 
 
   public registerRouter(router: router):void {
     this.setOfRouters.push(router);
+  }
+  public registerPlugin(plugin: plugin):void {
+    this.setOfPlugins.push(plugin);
   }
 
   private registerPlugins() {
@@ -56,7 +66,12 @@ export class Server {
   //   await initLocalDatabasesIfNotExists();
   // }
 
-  public async initServer(port: string, host: string):Promise<void> {
-    await this.serverInstance.listen(port, host);
+  public async initServer(port: number, host: string):Promise<void> {
+    await this.serverInstance.listen({ port: port, host: host }, (err) => {
+      if (err) {
+        logger.error(err);
+        process.exit(1);
+      }
+    });
   }
 }

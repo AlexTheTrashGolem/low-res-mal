@@ -5,7 +5,7 @@ import {
   RequestParamsDefault
 } from "fastify";
 import { ReplyGenericInterface } from "fastify/types/reply";
-import { progress } from "./userTypes";
+import { Progress } from "./userTypes";
 
 interface RequestGenericInterfaceCreateUser {
   Body: {
@@ -25,7 +25,16 @@ interface RequestGenericInterfaceReadUser {
   Body?: RequestBodyDefault;
   Querystring?: RequestQuerystringDefault;
   Params: {
-    id: number;
+    userId: number;
+  };
+  Headers?: RequestHeadersDefault;
+}
+
+interface RequestGenericInterfacePromoteUser {
+  Body?: RequestBodyDefault;
+  Querystring?: RequestQuerystringDefault;
+  Params: {
+    userId: number;
   };
   Headers?: RequestHeadersDefault;
 }
@@ -39,14 +48,23 @@ interface RequestGenericInterfaceUpdateUser {
     newCity?: string;
   };
   Querystring?: RequestQuerystringDefault;
-  Params?: RequestParamsDefault;
+  Params?: {
+    userId: number;
+  };
   Headers?: RequestHeadersDefault;
 }
 
 
 interface RequestGenericInterfaceDeleteUser {
+  Body?: {
+    userId: number;
+    newUsername?: string;
+    newAge?: number;
+    newPassword?: string;
+    newCity?: string;
+  };
   Params: {
-    id: number;
+    userId: number;
   };
 }
 
@@ -55,7 +73,7 @@ interface RequestGenericInterfaceCreateAnimeListRecord {
     userId: number;
     titleId: number;
     score: number;
-    progress: progress;
+    progress: Progress;
   };
   Querystring?: RequestQuerystringDefault;
   Params?: RequestParamsDefault;
@@ -77,7 +95,7 @@ interface RequestGenericInterfaceUpdateAnimeListRecord {
     userId: number;
     titleId: number;
     newScore: number;
-    newProgress: progress;
+    newProgress: Progress;
   };
   Querystring?: RequestQuerystringDefault;
   Params?: RequestParamsDefault;
@@ -91,6 +109,19 @@ interface RequestGenericInterfaceDeleteAnimeListRecord {
   };
 }
 
+interface RequestGenericInterfaceLoginUser {
+  Body: {
+    username: string
+    password: string
+  }
+
+}
+
+export interface RouteGenericInterfaceLoginUser
+  extends RequestGenericInterfaceLoginUser,
+      ReplyGenericInterface{
+
+}
 
 export interface RouteGenericInterfaceDeleteAnimeListRecord
   extends RequestGenericInterfaceDeleteAnimeListRecord,
@@ -119,7 +150,7 @@ export interface RouteGenericInterfaceDeleteUser
 
 export interface RouteGenericInterfaceUpdateUser
   extends RequestGenericInterfaceUpdateUser,
-    ReplyGenericInterface {
+    ReplyGenericInterface{
 }
 
 export interface RouteGenericInterfaceUser
@@ -130,5 +161,10 @@ export interface RouteGenericInterfaceUser
 export interface RouteGenericInterfaceGetUser
   extends RequestGenericInterfaceReadUser,
     ReplyGenericInterface {
+}
+
+export interface RouteGenericInterfacePromoteUser
+    extends RequestGenericInterfacePromoteUser,
+        ReplyGenericInterface {
 }
 
